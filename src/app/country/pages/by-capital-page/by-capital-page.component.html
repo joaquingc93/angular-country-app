@@ -1,5 +1,12 @@
 <!-- country-search-input -->
-<country-search-input (value)="onSearch($event)" />
+<country-search-input (value)="capitalQuery.set($event.trim())" />
 
-<!-- country-list -->
-<country-list [countries]="countries()" />
+@if (countriesResource.isLoading()) {
+<p class="mt-4">Cargando...</p>
+} @else if (countriesResource.error()) {
+<p class="text-error mt-4">Error al cargar datos</p>
+} @else if (countriesResource.hasValue()) {
+<country-list [countries]="countriesResource.value()" />
+} @else {
+<p class="mt-4">Ingresa una capital para buscar.</p>
+}

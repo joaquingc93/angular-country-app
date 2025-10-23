@@ -12,7 +12,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (country of countries();track country.cca2; let index=$index) {
+      @for (country of countries(); track country.cca2; let index = $index) {
       <tr>
         <td>{{ index + 1 }}</td>
         <td>{{ country.flag }}</td>
@@ -22,17 +22,20 @@
             height="20"
             [src]="country.flagSvg"
             [alt]="country.name"
+            loading="lazy"
           />
         </td>
-        <td>{{ country.flag }}</td>
         <td>{{ country.name }}</td>
         <td>{{ country.capital }}</td>
-        <td>{{ country.population }}</td>
+        <td>{{ country.population | number }}</td>
         <td>
-          <a class="link-primary">Ver más...</a>
+          <a class="link link-primary">Ver más…</a>
         </td>
       </tr>
       }
     </tbody>
   </table>
+  @if (!countries().length) {
+  <p class="mt-4 text-sm opacity-70">Sin resultados.</p>
+  }
 </section>

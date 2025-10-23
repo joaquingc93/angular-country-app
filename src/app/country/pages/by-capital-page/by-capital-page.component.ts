@@ -1,4 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
+import { resource } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { SearchInputComponent } from '../../components/search-input/search-input.component';
 import { CountryListComponent } from '../../components/country-list/country-list.component';
 import { CountryService } from '../../services/country.service';
@@ -11,16 +13,20 @@ import { Country } from '../../interfaces/country.interface';
   templateUrl: './by-capital-page.component.html',
 })
 export class ByCapitalPageComponent {
-  countryService = inject(CountryService);
-  isLoading = signal(false);
-  countries = signal<Country[]>([]);
+  private countryService = inject(CountryService);
 
-  onSearch(value: string) {
-    if (this.isLoading()) return;
-    this.isLoading.set(true);
-    this.countryService.searchByCapital(value).subscribe((response) => {
-      this.isLoading.set(false);
-      this.countries.set(response);
-    });
-  }
+  // Signal para el término de búsqueda confirmado (submit)
+  capitalQuery = signal<string>('');
+
+  // Resource que carga países según la capital
+  countriesResource = resource<Country[], string>({
+    params: () => this.capitalQuery(),
+    defaultValue: [],
+    loader: async ({ params }) => {
+      if (!params) return [];
+      return firstValueFrom(this.countryService.searchByCapital(params));
+    },
+  });
+
+  // Sin método onSearch: el template actualizará directamente capitalQuery
 }
