@@ -5,10 +5,12 @@
     [placeholder]="placeholder()"
     autofocus
     #txtSearch
-    (keyup.enter)="value.emit(txtSearch.value)"
+    (input)="onInputChange(txtSearch.value)"
+    (keyup.enter)="onSearch(txtSearch.value)"
+    [value]="searchTerm()"
   />
 
-  <button class="btn btn-primary" (click)="value.emit(txtSearch.value)">
+  <button class="btn btn-primary" (click)="onSearch(txtSearch.value)">
     Buscar
   </button>
 </section>

@@ -1,1 +1,63 @@
-<p>country-page works!</p>,
+<div class="container mx-auto p-4">
+  <!-- Estado de carga -->
+  @if (countryResource.isLoading()) {
+  <div class="flex justify-center items-center min-h-[400px]">
+    <span class="loading loading-spinner loading-lg"></span>
+  </div>
+  }
+
+  <!-- Estado de error o no encontrado -->
+  @if (countryResource.error() || (!countryResource.isLoading() &&
+  !countryResource.value())) {
+  <app-not-found
+    [message]="
+      countryResource.error()
+        ? 'Error al cargar el país. Por favor, intenta nuevamente.'
+        : 'No se encontró información del país solicitado.'
+    "
+  />
+  }
+
+  <!-- Contenido del país -->
+  @if (countryResource.hasValue() && countryResource.value(); as country) {
+  <div class="card bg-base-100 shadow-xl">
+    <figure class="px-10 pt-10">
+      <img
+        [src]="country.flagSvg"
+        [alt]="'Bandera de ' + country.name"
+        class="rounded-xl max-h-64 object-contain"
+      />
+    </figure>
+    <div class="card-body">
+      <h2 class="card-title text-3xl">{{ country.flag }} {{ country.name }}</h2>
+
+      <div class="divider"></div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="stat bg-base-200 rounded-lg">
+          <div class="stat-title">Capital</div>
+          <div class="stat-value text-2xl">{{ country.capital }}</div>
+        </div>
+
+        <div class="stat bg-base-200 rounded-lg">
+          <div class="stat-title">Población</div>
+          <div class="stat-value text-2xl">
+            {{ country.population | number }}
+          </div>
+        </div>
+
+        <div class="stat bg-base-200 rounded-lg">
+          <div class="stat-title">Código</div>
+          <div class="stat-value text-2xl">{{ country.cca2 }}</div>
+        </div>
+      </div>
+
+      <div class="card-actions justify-end mt-4">
+        <a routerLink="/country/by-capital" class="btn btn-primary"
+          >Volver a búsqueda</a
+        >
+      </div>
+    </div>
+  </div>
+  }
+</div>

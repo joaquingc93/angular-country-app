@@ -2,6 +2,7 @@
 <country-search-input
   placeholder="Buscar por país"
   (value)="countryQuery.set($event.trim())"
+  [initialValue]="countryQuery()"
 />
 
 @if (countriesResource.isLoading()) {

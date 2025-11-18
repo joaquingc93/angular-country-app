@@ -1,5 +1,8 @@
 <!-- country-search-input -->
-<country-search-input (value)="capitalQuery.set($event.trim())" />
+<country-search-input
+  (value)="capitalQuery.set($event.trim())"
+  [initialValue]="capitalQuery()"
+/>
 
 @if (countriesResource.isLoading()) {
 <p class="mt-4">Cargando...</p>
