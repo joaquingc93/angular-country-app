@@ -10,5 +10,10 @@
     "angular-page": {
       "skipChangeDetectionOnPush": true
     }
+  },
+  "chat.mcp.serverSampling": {
+    "angular-country-app/.vscode/mcp.json: angular-cli": {
+      "allowedModels": []
+    }
   }
 }

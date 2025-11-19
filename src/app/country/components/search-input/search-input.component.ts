@@ -2,7 +2,7 @@ import {
   Component,
   input,
   output,
-  signal,
+  linkedSignal,
   effect,
   ChangeDetectionStrategy,
 } from '@angular/core';
@@ -17,18 +17,10 @@ export class SearchInputComponent {
   placeholder = input('Buscar');
   value = output<string>();
   debounceTime = input<number>(500);
-  initialValue = input<string>('');
+  initialValue = input<string>();
 
-  // Señal interna para trackear el valor del input
-  searchTerm = signal<string>('');
-
-  // Effect para sincronizar initialValue con searchTerm
-  private syncInitialValue = effect(() => {
-    const initial = this.initialValue();
-    if (initial && initial !== this.searchTerm()) {
-      this.searchTerm.set(initial);
-    }
-  });
+  // linkedSignal se sincroniza automáticamente con initialValue al inicializar
+  searchTerm = linkedSignal<string>(() => this.initialValue() ?? '');
 
   // Effect con onCleanup para manejar el timeout de forma segura
   private debounceEffect = effect((onCleanup) => {
@@ -44,18 +36,4 @@ export class SearchInputComponent {
       clearTimeout(timeoutId);
     });
   });
-
-  // Método para actualizar la señal cuando el input cambia
-  onInputChange(value: string): void {
-    this.searchTerm.set(value);
-  }
-
-  // Método para búsqueda inmediata (Enter o botón)
-  onSearch(value: string): void {
-    // Actualizar la señal disparará el effect, pero el onCleanup
-    // cancelará el timeout pendiente automáticamente
-    this.searchTerm.set(value);
-    // Emitir inmediatamente sin esperar el debounce
-    this.value.emit(value.trim());
-  }
 }
